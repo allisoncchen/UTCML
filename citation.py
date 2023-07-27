@@ -62,10 +62,10 @@ df= pd.read_csv("CleanedFile.csv" )
 
 # run from 149 to 250 in batcßhes and also save these batches in seperate csv. If the terminal prints "Please show you're not a robot" or "Our systems have detected unusual traffic from your computer network. This page checks to see if it's really you sending the requests, and not a robot. Why did this happen?" you have to stop for a while or change your network
 
-start = 1871
-stop = 1900
+start = 299
+stop = 317
 
-df=df[start:stop]
+df = df[start:stop]
 # print(f"df {df}")
 
 outputFile = f"{start}-{stop}"
@@ -74,7 +74,7 @@ print(f"output file name: {outputFile}")
 # quit()
 #open the webpage
 for i, row in df.iterrows():
-    k=row['Title']
+    k = row['Title']
     # k="A message from Addiction's new Editor‐in‐Chief, Professor John Marsden."
     query = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
     print(f"ARTICLE #: {i}")
@@ -87,7 +87,7 @@ for i, row in df.iterrows():
     
     # driver.get("https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/")
     # print(driver.find_element(By.XPATH, "/html/body").text)
-    x=driver.find_element(By.XPATH, "/html/body").text
+    x = driver.find_element(By.XPATH, "/html/body").text
     print(f"X = {x}")
 
     # quit()
@@ -97,7 +97,7 @@ for i, row in df.iterrows():
     time.sleep(5)
     elements = [f for f in driver.find_elements(By.XPATH, "//*[contains(@class, 'gs_fl') or @class = 'gs_fl']")]
     if len(elements) > 2:
-        df.at[i,"Citation"]=0
+        df.at[i,"Citation"] = 0
         print("putting a -")
         continue;
 
@@ -105,8 +105,10 @@ for i, row in df.iterrows():
 
     # wait for the page to load and extract the number of citations
     time.sleep(5)
+
     try:
         cited_by = driver.find_element(By.XPATH, "//a[contains(text(),'Cited by ')]")
+
     except:
         df.at[i,"Citation"]=0
         # print(row['Citation'])
@@ -114,6 +116,7 @@ for i, row in df.iterrows():
         df.to_csv(f"{outputFile}.csv")
         # quit()
         continue;
+
     else:
         print(cited_by)
         # quit()
