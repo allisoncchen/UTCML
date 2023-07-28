@@ -1,3 +1,5 @@
+"Merges all of the csv files together"
+
 import os
 import pandas as pd
 
@@ -35,7 +37,7 @@ combined_data = pd.concat(dfs, ignore_index = False)
 
 # Save the combined data to a CSV file
 combined_file_name = 'combined_data.csv'
-combined_data.to_csv(combined_file_name, index=False)
+combined_data.to_csv(combined_file_name, encoding='utf-8', index=False)
 
 print(f"Combined data saved to '{combined_file_name}'.")
 
