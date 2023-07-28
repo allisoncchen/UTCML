@@ -58,12 +58,12 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 # driver = webdriver.Chrome(executable_path = path, options = chrome_options)
 # driver = webdriver.Chrome('/home/ubuntu/UTCML/chrome-linux64')
 
-df= pd.read_csv("CleanedFile.csv" )
+df= pd.read_csv("toFind.csv" )
 
 # run from 149 to 250 in batcßhes and also save these batches in seperate csv. If the terminal prints "Please show you're not a robot" or "Our systems have detected unusual traffic from your computer network. This page checks to see if it's really you sending the requests, and not a robot. Why did this happen?" you have to stop for a while or change your network
 
-start = 299
-stop = 317
+start = 55
+stop = 84
 
 df = df[start:stop]
 # print(f"df {df}")
