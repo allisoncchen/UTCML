@@ -8,18 +8,13 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.proxy import Proxy, ProxyType
-
 from selenium.webdriver.chrome.service import Service as ChromeService
-
-
 
 import time
 import random
-
 import pandas as pd
 import re
 
-#  webdriver setup
 
 PORT = '10001'
 HOSTNAME = 'us.smartproxy.com'
@@ -43,67 +38,56 @@ options.add_argument("--headless")
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-blink-features=AutomationControlled')
 
+# Get most updated web driver from the internet
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# service = ChromeService(executable_path='/home/ubuntu/UTCML/chromedriver_linux64')
+# Main file of 2055 with all the article information 
+fileToRead = "original2055.csv"
+df= pd.read_csv(fileToRead)
 
-# driver = webdriver.Chrome(service=service)
-
-# driver = webdriver.Chrome()
-
-# path = '/home/ubuntu/UTCML/chrome-linux64'
-
-# chrome_options = webdriver.ChromeOptions()
-
-# driver = webdriver.Chrome(executable_path = path, options = chrome_options)
-# driver = webdriver.Chrome('/home/ubuntu/UTCML/chrome-linux64')
-
-df= pd.read_csv("toFind.csv" )
-
-# run from 149 to 250 in batcßhes and also save these batches in seperate csv. If the terminal prints "Please show you're not a robot" or "Our systems have detected unusual traffic from your computer network. This page checks to see if it's really you sending the requests, and not a robot. Why did this happen?" you have to stop for a while or change your network
-
+# Start and stop indexes for each iteration
 start = 55
 stop = 84
 
+# Start = inclusive / Stop = exclusive
 df = df[start:stop]
 # print(f"df {df}")
 
 outputFile = f"{start}-{stop}"
 print(f"output file name: {outputFile}")
 
-# quit()
-#open the webpage
+
+# Iterating throughout the entire CSV
 for i, row in df.iterrows():
+
+    # Grabbing title and formatting to get rid of weird punctuation
     k = row['Title']
-    # k="A message from Addiction's new Editor‐in‐Chief, Professor John Marsden."
     query = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
+
+    # For testing purposes
     print(f"ARTICLE #: {i}")
     print(query)
-    # ("HERE)")
-    # query = "A message from Addiction s new Editor in Chief Professor John Marsden"
+    
+    # Appending article title to google scholar link to find page
     url = "https://scholar.google.com/scholar?hl=en&q="+query
     print(url)
     driver.get(url)
     
-    # driver.get("https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/")
-    # print(driver.find_element(By.XPATH, "/html/body").text)
+    
     x = driver.find_element(By.XPATH, "/html/body").text
     print(f"X = {x}")
 
-    # quit()
-  
-    # print("sk")
-
+    # 5 second pause before getting webdriver gets Google Scholar data
     time.sleep(5)
     elements = [f for f in driver.find_elements(By.XPATH, "//*[contains(@class, 'gs_fl') or @class = 'gs_fl']")]
+
+    # If more than 2 elements, script will automatically put a 0 
     if len(elements) > 2:
         df.at[i,"Citation"] = 0
         print("putting a -")
         continue;
 
-    # quit()
-
-    # wait for the page to load and extract the number of citations
+    # Wait for the page to load and extract the number of citations
     time.sleep(5)
 
     try:
@@ -119,15 +103,17 @@ for i, row in df.iterrows():
 
     else:
         print(cited_by)
-        # quit()
+        
         num_citations = cited_by.text.split(" ")[-1]
         print(f"The paper has {num_citations} citations. \n")
         df.at[i,"Citation"]=num_citations
-        # print(row['Citation'])
+        
         df.to_csv(f"{outputFile}.csv")
-        # quit()
+        
 
+# Writing data to output file
 df.to_csv(f"{outputFile}.csv")
-# close the webdriver
-# driver.quit()
+
+
+# Close the webdriver
 driver.close()
