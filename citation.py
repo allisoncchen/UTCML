@@ -46,8 +46,8 @@ fileToRead = "original2055.csv"
 df= pd.read_csv(fileToRead)
 
 # Start and stop indexes for each iteration
-start = 55
-stop = 84
+start = 91
+stop = 94
 
 # Start = inclusive / Stop = exclusive
 df = df[start:stop]
