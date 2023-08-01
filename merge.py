@@ -7,7 +7,7 @@ import pandas as pd
 def get_numeric_value(file_name):
     return int(file_name[0 : 4])
 
-folder_path = 'Citations'  # Replace with the actual folder path
+folder_path = 'reruns'  # Replace with the actual folder path
 
 # Get a list of all CSV files in the folder
 csv_files = sorted([file for file in os.listdir(folder_path) if file.endswith('.csv')])

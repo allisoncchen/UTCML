@@ -42,12 +42,12 @@ options.add_argument('--disable-blink-features=AutomationControlled')
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 # Main file of 2055 with all the article information 
-fileToRead = "original2055.csv"
+fileToRead = "toRerun.csv"
 df= pd.read_csv(fileToRead)
 
 # Start and stop indexes for each iteration
-start = 91
-stop = 94
+start = 60
+stop = 90
 
 # Start = inclusive / Stop = exclusive
 df = df[start:stop]
@@ -94,7 +94,7 @@ for i, row in df.iterrows():
         cited_by = driver.find_element(By.XPATH, "//a[contains(text(),'Cited by ')]")
 
     except:
-        df.at[i,"Citation"]=0
+        df.at[i,"Citation"] = "-"
         # print(row['Citation'])
         print(f"putting a 0 \n")
         df.to_csv(f"{outputFile}.csv")
