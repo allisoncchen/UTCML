@@ -83,7 +83,7 @@ for i, row in df.iterrows():
 
     # If more than 2 elements, script will automatically put a 0 
     if len(elements) > 2:
-        df.at[i,"Citation"] = 0
+        df.at[i,"Citation"] = "-"
         print("putting a -")
         continue;
 
@@ -94,7 +94,7 @@ for i, row in df.iterrows():
         cited_by = driver.find_element(By.XPATH, "//a[contains(text(),'Cited by ')]")
 
     except:
-        df.at[i,"Citation"] = "-"
+        df.at[i,"Citation"] = 0
         # print(row['Citation'])
         print(f"putting a 0 \n")
         df.to_csv(f"{outputFile}.csv")
