@@ -2,12 +2,12 @@
 
 import os
 import pandas as pd
-
+import re
 
 def regularMerge():
 
-    original = pd.read_csv("original2055.csv")
-    otherFile = pd.read_csv("combined_data.csv")
+    original = pd.read_csv("unduplicated.csv")
+    otherFile = pd.read_csv("completed2055TWO.csv")
 
     original["Citation"] = ""
 
@@ -30,7 +30,7 @@ def regularMerge():
                 print(f"FOUND FILE")
                 print(f"Looking for: {title}   Found: {otherTitle}")
                 original.at[i, "Citation"] = citationValue
-                original.to_csv(f"complete.csv")
+                original.to_csv(f"unduplicated-complete.csv")
 
                 # Set found to true
                 found = True
@@ -49,10 +49,10 @@ def regularMerge():
     # Finished iterating through main file!
     print("DONE :)")
 
-    original.to_csv("complete.csv")
+    original.to_csv("unduplicated-complete.csv")
 
 def twoFileMerge():
-    original = pd.read_csv("completed2055TWO.csv")
+    original = pd.read_csv("completed2055TWO_Unduplicated.csv")
     otherFile = pd.read_csv("combined_data.csv")
 
     original["Citation"] = ""
@@ -61,7 +61,7 @@ def twoFileMerge():
     for i, row in original.iterrows():
         title = row["Title"]
         found = False
-        originalCitation = row["Citation"]
+        originalCitation = row["Original Citation"]
         
         for k, otherRow in otherFile.iterrows():
             otherTitle = otherRow["Title"]
@@ -73,7 +73,7 @@ def twoFileMerge():
                 print(f"FOUND FILE")
                 print(f"Looking for: {title}   Found: {otherTitle}")
                 original.at[i, "Citation"] = otherCitationValue
-                original.to_csv(f"complete.csv")
+                original.to_csv(f"dashesZerosVerified_unduplicated.csv")
             
                 found = True
             
@@ -89,13 +89,48 @@ def twoFileMerge():
     # Finished iterating through main file!
     print("DONE :)")
 
-    original.to_csv("complete.csv")
+    original.to_csv("dashesZerosVerified_unduplicated.csv")
 
+
+# Helper method for remove duplicates to remove all non-alphabet/non-numerical values + strips whitespace
+def preprocess_string(input_string):
+
+    if isinstance(input_string, str):
+        input_string = re.sub(r"[^a-zA-Z0-9]+", ' ', input_string)
+        input_string = input_string.strip()
+
+    return input_string
+
+# Removes duplicates; keeps all but the first value seen
+def removeDuplicates():
+    data = pd.read_csv("completed2055TWO.csv")
+    
+    data["Altered Title"] = data["Altered Title"].apply(preprocess_string)
+    
+    data.sort_values("Altered Title", inplace = True)
+    
+    # Drop duplicates based on cleaned "Title" column
+    data.drop_duplicates(subset = "Altered Title", keep = "first", inplace = True)
+    
+    data.to_csv("completed2055TWO_Unduplicated.csv", encoding = 'utf-8', index = False)
+    
+    print("Finished")
 
 
 def main():
-   # regularMerge()
+    # regularMerge()
     twoFileMerge()
+    # removeDuplicates()
 
 if __name__ == "__main__":
     main()
+
+
+
+"""
+1) Needs to iterate through the csv of 2055
+2) Sees duplicate, removes punctuation/capitilization/etc. BUT saves original
+3) Compares, removes duplicate
+4) One that remains is the original 
+5) Cycle continues and outputs to a csv
+"""
