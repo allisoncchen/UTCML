@@ -3,6 +3,7 @@
 import os
 import pandas as pd
 import re
+import math 
 
 def regularMerge():
 
@@ -52,44 +53,46 @@ def regularMerge():
     original.to_csv("unduplicated-complete.csv")
 
 def twoFileMerge():
-    original = pd.read_csv("completed2055TWO_Unduplicated.csv")
-    otherFile = pd.read_csv("combined_data.csv")
+    original = pd.read_csv("completed_unduplicated.csv")
+    otherFile = pd.read_csv("combinedReruns_unduplicate.csv")
 
+    # Initialize the "Citation" column in the original DataFrame
     original["Citation"] = ""
 
     # Iterating through the original cleaned file
     for i, row in original.iterrows():
         title = row["Title"]
+        print(f"Title: {title}")
         found = False
         originalCitation = row["Original Citation"]
-        
+        print(f"\nOriginal Citation {originalCitation}")
+
         for k, otherRow in otherFile.iterrows():
             otherTitle = otherRow["Title"]
             otherCitationValue = otherRow["Citation"]
 
+            # Handling NaN comparison correctly
+            if pd.notna(otherTitle):
+                if title == otherTitle:
+                    print(f"Citation value: {otherCitationValue}")
+                    print("FOUND FILE")
+                    print(f"Looking for: {title}   Found: {otherTitle}")
+                    original.at[i, "Citation"] = otherCitationValue
+                    original.to_csv("completed-combinedReruns_unduplicate.csv")
+                    found = True
+                    break
 
-            if otherTitle.__eq__(title):
-                print(f"Citation value : {otherCitationValue}")
-                print(f"FOUND FILE")
-                print(f"Looking for: {title}   Found: {otherTitle}")
-                original.at[i, "Citation"] = otherCitationValue
-                original.to_csv(f"dashesZerosVerified_unduplicated.csv")
-            
-                found = True
-            
-            if found:
-                break;
-            
         if not found:
             original.at[i, "Citation"] = originalCitation
 
-    # Print out row number
-        print(f"Row: {i} COMPLETED \n")
+    # Save the final DataFrame to a new CSV file
+    original.to_csv("completed-combinedReruns_unduplicate.csv", index=False)
 
-    # Finished iterating through main file!
-    print("DONE :)")
+    # Finish message
+    print("Merge completed successfully.") 
+    
 
-    original.to_csv("dashesZerosVerified_unduplicated.csv")
+    original.to_csv("completed-combinedReruns_unduplicate.csv")
 
 
 # Helper method for remove duplicates to remove all non-alphabet/non-numerical values + strips whitespace
@@ -103,16 +106,16 @@ def preprocess_string(input_string):
 
 # Removes duplicates; keeps all but the first value seen
 def removeDuplicates():
-    data = pd.read_csv("completed2055TWO.csv")
+    data = pd.read_csv("dashesZerosVerified_unduplicated.csv")
     
-    data["Altered Title"] = data["Altered Title"].apply(preprocess_string)
+    data["Altered Abstract"] = data["Altered Abstract"].apply(preprocess_string)
     
-    data.sort_values("Altered Title", inplace = True)
+    data.sort_values("Altered Abstract", inplace = True)
     
-    # Drop duplicates based on cleaned "Title" column
-    data.drop_duplicates(subset = "Altered Title", keep = "first", inplace = True)
+    # Drop duplicates based on cleaned "Abstract" column
+    data.drop_duplicates(subset = "Altered Abstract", keep = "first", inplace = True)
     
-    data.to_csv("completed2055TWO_Unduplicated.csv", encoding = 'utf-8', index = False)
+    data.to_csv("completed_unduplicated.csv", encoding = 'utf-8', index = False)
     
     print("Finished")
 

@@ -46,8 +46,8 @@ fileToRead = "toRerun.csv"
 df= pd.read_csv(fileToRead)
 
 # Start and stop indexes for each iteration
-start = 60
-stop = 90
+start = 0
+stop = 30
 
 # Start = inclusive / Stop = exclusive
 df = df[start:stop]
@@ -81,7 +81,7 @@ for i, row in df.iterrows():
     time.sleep(5)
     elements = [f for f in driver.find_elements(By.XPATH, "//*[contains(@class, 'gs_fl') or @class = 'gs_fl']")]
 
-    # If more than 2 elements, script will automatically put a 0 
+    # More than 2 elements
     if len(elements) > 2:
         df.at[i,"Citation"] = "-"
         print("putting a -")
@@ -93,8 +93,9 @@ for i, row in df.iterrows():
     try:
         cited_by = driver.find_element(By.XPATH, "//a[contains(text(),'Cited by ')]")
 
+    # Could not ind citation
     except:
-        df.at[i,"Citation"] = 0
+        df.at[i,"Citation"] = "N/A"
         # print(row['Citation'])
         print(f"putting a 0 \n")
         df.to_csv(f"{outputFile}.csv")

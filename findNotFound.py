@@ -35,7 +35,7 @@ def collectNotAvailable():
 
 
 def collectOneZero():
-    df = pd.read_csv("completed2055TWO.csv")
+    df = pd.read_csv("dashesZerosVerified_unduplicated.csv")
     outputFile = "toRerun.csv"
 
     dfs = []
