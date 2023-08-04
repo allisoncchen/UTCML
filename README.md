@@ -1,3 +1,3 @@
 # UTCML
 
-Files for scraping Google Scholar.
+Files for and from scraping Google Scholar.
