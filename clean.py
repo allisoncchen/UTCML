@@ -7,31 +7,26 @@ import math
 
 def regularMerge():
 
-    original = pd.read_csv("unduplicated.csv")
-    otherFile = pd.read_csv("completed2055TWO.csv")
+    original = pd.read_csv("addNumbers.csv", encoding = 'utf-8')
+    otherFile = pd.read_csv("correctFormat.csv", encoding = 'utf-8')
 
-    original["Citation"] = ""
+    otherFile["Citation"] = ""
 
-    # Iterating through the original cleaned file
+    # Iterating through the unduplicated file with citations
     for i, row in original.iterrows():
-        title = row["Title"]
-        # Declares found as false for now, until file is found
+        rowNumber = row["Unnamed: 0"] # row with number
         found = False
 
-        # Iterating through merged file
         for k, otherRow in otherFile.iterrows():
-            otherTitle = otherRow["Title"]
+            otherRowNumber = otherRow["Row"]
 
             # If the two titles are the same 
-            if (title.__eq__(otherTitle)):
-                citationValue = otherRow["Citation"]
+            if ((rowNumber) == (otherRowNumber)):
+                citation = row["Citation"] # grabbing citation value
 
-                # Information for user to read on console
-                print(f"Citation value : {citationValue}")
-                print(f"FOUND FILE")
-                print(f"Looking for: {title}   Found: {otherTitle}")
-                original.at[i, "Citation"] = citationValue
-                original.to_csv(f"unduplicated-complete.csv")
+                print(f"Looking for row: {i}   Found: {k}")
+                otherFile.at[k, "Citation"] = citation
+                otherFile.to_csv(f"addCitations.csv", encoding = 'utf-8')
 
                 # Set found to true
                 found = True
@@ -42,7 +37,8 @@ def regularMerge():
 
         # Set citation value to "N/A"
         if not found:
-            original.at[i, "Citation"] = "N/A"
+            otherFile.at[k, "Citation"] = ""
+            otherFile.to_csv(f"addCitations.csv", encoding = 'utf-8')
         
         # Print out row number
         print(f"Row: {i} COMPLETED \n")
@@ -50,7 +46,7 @@ def regularMerge():
     # Finished iterating through main file!
     print("DONE :)")
 
-    original.to_csv("unduplicated-complete.csv")
+    otherFile.to_csv("addCitations.csv", encoding = 'utf-8')
 
 def twoFileMerge():
     original = pd.read_csv("completed_unduplicated.csv")
@@ -121,8 +117,8 @@ def removeDuplicates():
 
 
 def main():
-    # regularMerge()
-    twoFileMerge()
+    regularMerge()
+    # twoFileMerge()
     # removeDuplicates()
 
 if __name__ == "__main__":
