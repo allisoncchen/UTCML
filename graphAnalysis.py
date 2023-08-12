@@ -52,6 +52,7 @@ def uniquePublications():
     outputFile = "publicationCounts.csv"
 
     articlePublications = {}
+    originalPublicationTitles = {}
     uniquePublications = 0
 
     # Iterating through the original cleaned file
@@ -63,15 +64,21 @@ def uniquePublications():
         if publication in articlePublications:
             articlePublications[publication] = articlePublications[publication] + 1
 
+            # Additive dictionary just to keep track of the original titles
+            originalPublicationTitles[originalPublication] = articlePublications[publication]
+
         else:
             articlePublications[publication] = 1
             uniquePublications = uniquePublications + 1
+            
+            originalPublicationTitles[originalPublication] = articlePublications[publication]
+
 
         # print(f"ARTICLE: {i} YEAR: {year}")
 
     with open(outputFile, 'w', newline = '') as f:
         writeOut = csv.writer(f)
-        writeOut.writerow(["Publication Venue", "Count"])
+        writeOut.writerow(["Publication Venue", "Count", "Original Publication Title"])
 
         total = 0
         for key in articlePublications:
@@ -80,6 +87,9 @@ def uniquePublications():
             count = articlePublications[key]
 
             writeOut.writerow([key, count])
+        
+        for key in originalPublicationTitles:
+            writeOut.writerow([key])
 
     print(f"Total: {total}")
     print(f"Unique publications: {uniquePublications}")
