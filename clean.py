@@ -102,24 +102,24 @@ def preprocess_string(input_string):
 
 # Removes duplicates; keeps all but the first value seen
 def removeDuplicates():
-    data = pd.read_csv("dashesZerosVerified_unduplicated.csv")
+    data = pd.read_csv("complete.csv")
     
-    data["Altered Abstract"] = data["Altered Abstract"].apply(preprocess_string)
+    data["Altered Title"] = data["Altered Title"].apply(preprocess_string)
     
-    data.sort_values("Altered Abstract", inplace = True)
+    data.sort_values("Altered Title", inplace = True)
     
     # Drop duplicates based on cleaned "Abstract" column
-    data.drop_duplicates(subset = "Altered Abstract", keep = "first", inplace = True)
+    data.drop_duplicates(subset = "Altered Title", keep = "first", inplace = True)
     
-    data.to_csv("completed_unduplicated.csv", encoding = 'utf-8', index = False)
+    data.to_csv("allisCoded.csv", encoding = 'utf-8', index = False)
     
     print("Finished")
 
 
 def main():
-    regularMerge()
+    # regularMerge()
     # twoFileMerge()
-    # removeDuplicates()
+    removeDuplicates()
 
 if __name__ == "__main__":
     main()
