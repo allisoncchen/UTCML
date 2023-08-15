@@ -116,10 +116,51 @@ def removeDuplicates():
     print("Finished")
 
 
+ 
+def mergeLabels():
+    original = pd.read_csv("complete1645.csv")
+    otherFile = pd.read_csv("labeledComplete.csv")
+
+    original["Title"] = ""
+
+    # Create an empty DataFrame to store the rows that need to be included in the output
+    rows_to_include = []
+
+    # Iterating through the original cleaned file
+    for i, row in original.iterrows():
+        title = row["Altered Title"]
+        print(f"Title: {title}")
+        found = False
+
+        for k, otherRow in otherFile.iterrows():
+            otherTitle = otherRow["Title"]
+
+            if pd.notna(otherTitle):
+                if title == otherTitle:
+                    print("FOUND FILE")
+                    print(f"Looking for: {title}   Found: {otherTitle}")
+                    original.at[i, "Title"] = otherTitle
+                    rows_to_include.append(otherRow)  # Store the row to be included in the output
+                    found = True
+                    break
+
+        print(f"COMPLETED: row {i}")
+
+    # Create a new DataFrame from the collected rows to include in the output
+    output_df = pd.DataFrame(rows_to_include)
+
+    # Save the final DataFrame to a new CSV file
+    output_df.to_csv("merged.csv", index=False)
+
+    # Finish message
+    print("Merge completed successfully.")
+
+
 def main():
     # regularMerge()
     # twoFileMerge()
-    removeDuplicates()
+    # removeDuplicates()
+    mergeLabels()
 
 if __name__ == "__main__":
     main()
