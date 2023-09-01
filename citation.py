@@ -42,12 +42,12 @@ options.add_argument('--disable-blink-features=AutomationControlled')
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 # Main file of 2055 with all the article information 
-fileToRead = "toRerun.csv"
+fileToRead = "justDashes.csv"
 df= pd.read_csv(fileToRead)
 
 # Start and stop indexes for each iteration
-start = 0
-stop = 30
+start = 60
+stop = 90
 
 # Start = inclusive / Stop = exclusive
 df = df[start:stop]
@@ -61,7 +61,8 @@ print(f"output file name: {outputFile}")
 for i, row in df.iterrows():
 
     # Grabbing title and formatting to get rid of weird punctuation
-    k = row['Title']
+    k = row['Title'] + row['Author']
+    print(f"HERE: {k}")
     query = re.sub(r"[^a-zA-Z0-9]+", ' ', k)
 
     # For testing purposes
@@ -82,10 +83,10 @@ for i, row in df.iterrows():
     elements = [f for f in driver.find_elements(By.XPATH, "//*[contains(@class, 'gs_fl') or @class = 'gs_fl']")]
 
     # More than 2 elements
-    if len(elements) > 2:
-        df.at[i,"Citation"] = "-"
-        print("putting a -")
-        continue;
+    # if len(elements) > 2:
+    #     df.at[i,"Citation"] = "-"
+    #     print("putting a -")
+    #     continue;
 
     # Wait for the page to load and extract the number of citations
     time.sleep(5)

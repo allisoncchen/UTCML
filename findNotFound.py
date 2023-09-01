@@ -55,7 +55,7 @@ def collectOneZero():
 
         # Couldn't find citation data in combined files
         if nothingFound.__eq__(citationValue) or zero.__eq__(citationValue):
-            print(f"{i} {zero == citationValue}")
+            # print(f"{i} {zero == citationValue}")
             # Append the row to the new DataFrame
             # print("here")
             # data = pd.DataFrame(row)
