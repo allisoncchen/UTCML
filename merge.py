@@ -7,7 +7,7 @@ import pandas as pd
 def get_numeric_value(file_name):
     return int(file_name[0 : 4])
 
-folder_path = 'rerun_unduplicate'  # Replace with the actual folder path
+folder_path = 'dashes'  # Replace with the actual folder path
 
 # Get a list of all CSV files in the folder
 csv_files = sorted([file for file in os.listdir(folder_path) if file.endswith('.csv')])
@@ -39,7 +39,7 @@ for file in csv_files: # For every csv file in the folder
 combined_data = pd.concat(dfs, ignore_index = False)
 
 # Save the combined data to a CSV file
-combined_file_name = 'combinedReruns_unduplicate.csv'
+combined_file_name = 'combined60.csv'
 combined_data.to_csv(combined_file_name, encoding='utf-8', index=False)
 
 # Finish message

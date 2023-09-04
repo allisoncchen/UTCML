@@ -46,8 +46,8 @@ fileToRead = "justDashes.csv"
 df= pd.read_csv(fileToRead)
 
 # Start and stop indexes for each iteration
-start = 60
-stop = 90
+start = 90
+stop = 120
 
 # Start = inclusive / Stop = exclusive
 df = df[start:stop]
